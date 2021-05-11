@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Space;
 use Illuminate\Http\Request;
 
 class SpaceController extends Controller
@@ -13,7 +14,9 @@ class SpaceController extends Controller
      */
     public function index()
     {
-        return view('pages.space.index');
+        $datas = Space::paginate(10);
+
+        return view('pages.space.index', compact('datas'));
     }
 
     /**
@@ -34,7 +37,16 @@ class SpaceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $this->validate($request, [
+            'name_receiver' => 'required',
+            'address'       => 'required',
+            'latitude'      => 'required',
+            'longitude'     => 'required'
+        ]);
+
+        Space::create($data);
+
+        return back()->with('status', 'Success');
     }
 
     /**
